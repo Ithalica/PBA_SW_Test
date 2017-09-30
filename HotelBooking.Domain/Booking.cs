@@ -1,8 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-
-namespace HotelBookingStartupProject.Models
+namespace HotelBooking.Domain
 {
     public class Booking
     {

@@ -1,9 +1,11 @@
-﻿using HotelBookingStartupProject.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using HotelBooking.Core.Interfaces;
+using HotelBooking.Domain;
+using HotelBooking.Web.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace HotelBookingStartupProject.Data.Repositories
+namespace HotelBooking.Web.Data.Repositories
 {
     public class BookingRepository : IRepository<Booking>
     {
@@ -14,16 +16,18 @@ namespace HotelBookingStartupProject.Data.Repositories
             db = context;
         }
 
-        public void Add(Booking entity)
+        public Booking Add(Booking entity)
         {
             var newBooking = db.Booking.Add(entity);
             db.SaveChanges();
+            return newBooking.Entity;
         }
 
-        public void Edit(Booking entity)
+        public Booking Edit(Booking entity)
         {
             db.Entry(entity).State = EntityState.Modified;
             db.SaveChanges();
+            return entity;
         }
 
         public Booking Get(int id)
@@ -36,11 +40,12 @@ namespace HotelBookingStartupProject.Data.Repositories
             return db.Booking.Include(b => b.Customer).Include(b => b.Room).ToList();
         }
 
-        public void Remove(int id)
+        public bool Remove(int id)
         {
             var booking = db.Booking.FirstOrDefault(b => b.Id == id);
             db.Booking.Remove(booking);
             db.SaveChanges();
+            return true;
         }
 
     }

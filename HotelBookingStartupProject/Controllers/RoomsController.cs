@@ -1,10 +1,10 @@
-﻿using System.Linq;
+﻿using HotelBooking.Core.Interfaces;
+using HotelBooking.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using HotelBookingStartupProject.Models;
-using HotelBookingStartupProject.Data.Repositories;
+using System.Linq;
 
-namespace HotelBookingStartupProject.Controllers
+namespace HotelBooking.Web.Controllers
 {
     public class RoomsController : Controller
     {

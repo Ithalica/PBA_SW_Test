@@ -1,9 +1,11 @@
-﻿using HotelBookingStartupProject.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using HotelBooking.Core.Interfaces;
+using HotelBooking.Domain;
+using HotelBooking.Web.Models;
 
-namespace HotelBookingStartupProject.Data.Repositories
+namespace HotelBooking.Web.Data.Repositories
 {
     public class CustomerRepository : IRepository<Customer>
     {
@@ -14,12 +16,12 @@ namespace HotelBookingStartupProject.Data.Repositories
             db = context;
         }
 
-        public void Add(Customer entity)
+        public Customer Add(Customer entity)
         {
             throw new NotImplementedException();
         }
 
-        public void Edit(Customer entity)
+        public Customer Edit(Customer entity)
         {
             throw new NotImplementedException();
         }
@@ -34,7 +36,7 @@ namespace HotelBookingStartupProject.Data.Repositories
             return db.Customer.ToList();
         }
 
-        public void Remove(int id)
+        public bool Remove(int id)
         {
             throw new NotImplementedException();
         }

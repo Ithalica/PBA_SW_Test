@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using HotelBookingStartupProject.BusinessLogic;
+﻿using HotelBooking.Core.Interfaces;
+using HotelBooking.Domain;
+using HotelBooking.Web.BusinessLogic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using HotelBookingStartupProject.Models;
-using HotelBookingStartupProject.Data.Repositories;
+using System;
 
-namespace HotelBookingStartupProject.Controllers
+namespace HotelBooking.Web.Controllers
 {
     public class BookingsController : Controller
     {

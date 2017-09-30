@@ -1,14 +1,14 @@
-﻿using System.Linq;
+﻿using HotelBooking.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using HotelBookingStartupProject.Models;
-using HotelBookingStartupProject.Data.Repositories;
+using System.Linq;
+using HotelBooking.Core.Interfaces;
 
-namespace HotelBookingStartupProject.Controllers
+namespace HotelBooking.Web.Controllers
 {
     public class CustomersController : Controller
     {
-        private IRepository<Customer> repository;
+        private readonly IRepository<Customer> repository;
 
         public CustomersController(IRepository<Customer> repos)
         {

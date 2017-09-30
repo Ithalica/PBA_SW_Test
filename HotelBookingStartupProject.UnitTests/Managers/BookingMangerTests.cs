@@ -1,8 +1,6 @@
-using System;
-using HotelBookingStartupProject.Data.Repositories;
-using HotelBookingStartupProject.Managers;
-using HotelBookingStartupProject.Models;
-using NSubstitute;
+using HotelBooking.Core.Interfaces;
+using HotelBooking.Domain;
+using HotelBooking.Web.Managers;
 using NUnit.Framework;
 
 namespace HotelBookingStartupProject.UnitTests.Managers

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using HotelBooking.Domain;
 using Microsoft.EntityFrameworkCore;
-using HotelBookingStartupProject.Models;
 
-namespace HotelBookingStartupProject.Data
+namespace HotelBooking.Web.Data
 {
     public class HotelBookingContext : DbContext
     {

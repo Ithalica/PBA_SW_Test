@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HotelBookingStartupProject.BusinessLogic;
-using HotelBookingStartupProject.Data.Repositories;
-using HotelBookingStartupProject.Models;
+﻿using System.Collections.Generic;
+using HotelBooking.Core.Interfaces;
+using HotelBooking.Domain;
+using HotelBooking.Web.BusinessLogic;
+using HotelBooking.Web.Data.Repositories;
+using HotelBooking.Web.Models;
 
-namespace HotelBookingStartupProject.Managers
+namespace HotelBooking.Web.Managers
 {
     public class CustomerManager : ICustomerManager
     {

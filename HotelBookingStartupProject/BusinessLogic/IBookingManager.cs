@@ -1,8 +1,9 @@
-﻿using HotelBookingStartupProject.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using HotelBooking.Domain;
+using HotelBooking.Web.Models;
 
-namespace HotelBookingStartupProject.BusinessLogic
+namespace HotelBooking.Web.BusinessLogic
 {
     public interface IBookingManager
     {

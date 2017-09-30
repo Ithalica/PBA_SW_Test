@@ -1,6 +1,4 @@
-using System;
-
-namespace HotelBookingStartupProject.Models
+namespace HotelBooking.Web.Models
 {
     public class ErrorViewModel
     {
