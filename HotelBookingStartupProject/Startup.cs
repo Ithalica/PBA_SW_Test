@@ -1,9 +1,8 @@
 ﻿using HotelBooking.Core.Interfaces;
+using HotelBooking.Core.Managers;
 using HotelBooking.Domain;
-using HotelBooking.Web.BusinessLogic;
 using HotelBooking.Web.Data;
 using HotelBooking.Web.Data.Repositories;
-using HotelBooking.Web.Managers;
 using HotelBooking.Web.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

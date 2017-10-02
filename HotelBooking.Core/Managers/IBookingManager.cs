@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using HotelBooking.Domain;
-using HotelBooking.Web.Models;
 
-namespace HotelBooking.Web.BusinessLogic
+namespace HotelBooking.Core.Managers
 {
     public interface IBookingManager
     {
@@ -12,6 +11,6 @@ namespace HotelBooking.Web.BusinessLogic
         bool CreateBooking(Booking booking);
         List<DateTime> GetFullyOccupiedDates(IList<Booking> bookings, DateTime minDate, DateTime maxDate);
         bool IsBookingDateValid(DateTime startDate, DateTime endDate);
-        Room GetAvaliableRoom(Booking booking);
+        Room GetAvaliableRoom(DateTime startDate, DateTime endDate);
     }
 }

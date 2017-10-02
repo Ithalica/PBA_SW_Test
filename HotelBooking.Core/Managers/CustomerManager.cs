@@ -1,11 +1,8 @@
 ﻿using System.Collections.Generic;
 using HotelBooking.Core.Interfaces;
 using HotelBooking.Domain;
-using HotelBooking.Web.BusinessLogic;
-using HotelBooking.Web.Data.Repositories;
-using HotelBooking.Web.Models;
 
-namespace HotelBooking.Web.Managers
+namespace HotelBooking.Core.Managers
 {
     public class CustomerManager : ICustomerManager
     {

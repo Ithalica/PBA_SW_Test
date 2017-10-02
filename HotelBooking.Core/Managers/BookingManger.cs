@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using HotelBooking.Core.Interfaces;
 using HotelBooking.Domain;
-using HotelBooking.Web.BusinessLogic;
-using HotelBooking.Web.Data.Repositories;
-using HotelBooking.Web.Models;
 
-namespace HotelBooking.Web.Managers
+namespace HotelBooking.Core.Managers
 {
     public class BookingManger : IBookingManager
     {
@@ -28,7 +25,7 @@ namespace HotelBooking.Web.Managers
 
         public bool CreateBooking(Booking booking)
         {
-            var room = GetAvaliableRoom(booking);
+            var room = GetAvaliableRoom(booking.StartDate, booking.EndDate);
 
             if (room != null)
             {
@@ -78,20 +75,20 @@ namespace HotelBooking.Web.Managers
 
         public bool IsBookingDateValid(DateTime startDate, DateTime endDate)
         {
-            return startDate < DateTime.Today || startDate > endDate;
+            return startDate > DateTime.Today && startDate < endDate;
         }
-
-        public Room GetAvaliableRoom(Booking booking)
+        
+        //INFO: Replaces old method: FindAvailableRoom 
+        public Room GetAvaliableRoom(DateTime startDate, DateTime endDate)
         {
-            //INFO: Replaces old method: FindAvailableRoom 
             Booking[] activeBookings = _bookingRepository.GetAll().Where(b => b.IsActive).ToArray();
 
             return (from room in _roomRepository.GetAll()
                 let activeBookingsForCurrentRoom = activeBookings.Where(b => b.RoomId == room.Id)
-                where activeBookingsForCurrentRoom.All(b => booking.StartDate < b.StartDate &&
-                                                            booking.EndDate < b.StartDate ||
-                                                            booking.StartDate > b.EndDate &&
-                                                            booking.EndDate > b.EndDate)
+                where activeBookingsForCurrentRoom.All(b => startDate < b.StartDate &&
+                                                            endDate < b.StartDate ||
+                                                            startDate > b.EndDate &&
+                                                            endDate > b.EndDate)
                 select room).FirstOrDefault();
         }
     }

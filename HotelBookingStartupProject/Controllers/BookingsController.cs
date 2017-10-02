@@ -1,10 +1,10 @@
 ﻿using HotelBooking.Core.Interfaces;
 using HotelBooking.Domain;
-using HotelBooking.Web.BusinessLogic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
+using HotelBooking.Core.Managers;
 
 namespace HotelBooking.Web.Controllers
 {
