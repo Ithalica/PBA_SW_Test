@@ -25,16 +25,13 @@ namespace HotelBooking.Core.Managers
 
         public bool CreateBooking(Booking booking)
         {
-            var room = GetAvaliableRoom(booking.StartDate, booking.EndDate);
-
+            var room = GetAvailableRoom(booking.StartDate, booking.EndDate);
             if (room != null)
             {
-                booking.RoomId = room.Id;
+                booking.Room = room;
                 booking.IsActive = true;
-                _bookingRepository.Add(booking);
-                return true;
+                return _bookingRepository.TryCreate(booking, out var _);
             }
-
             return false;
         }
 
@@ -49,27 +46,25 @@ namespace HotelBooking.Core.Managers
 
             return (minBookingDate, maxBookingDate);
         }
-        
+
         public List<DateTime> GetFullyOccupiedDates(IList<Booking> bookings, DateTime minDate, DateTime maxDate)
         {
 
             var fullyOccupiedDates = new List<DateTime>();
 
-            int noOfRooms = _roomRepository.GetAll().Count();
+            int noOfRooms = _roomRepository.GetAll().Count;
 
             if (bookings.Any())
             {
                 for (DateTime d = minDate; d <= maxDate; d = d.AddDays(1))
                 {
                     IEnumerable<Booking> noOfBookings = from b in bookings
-                        where b.IsActive && d >= b.StartDate && d <= b.EndDate
-                        select b;
+                                                        where b.IsActive && d >= b.StartDate && d <= b.EndDate
+                                                        select b;
                     if (noOfBookings.Count() >= noOfRooms)
                         fullyOccupiedDates.Add(d);
                 }
             }
-
-
             return fullyOccupiedDates;
         }
 
@@ -77,19 +72,19 @@ namespace HotelBooking.Core.Managers
         {
             return startDate > DateTime.Today && startDate < endDate;
         }
-        
+
         //INFO: Replaces old method: FindAvailableRoom 
-        public Room GetAvaliableRoom(DateTime startDate, DateTime endDate)
+        public Room GetAvailableRoom(DateTime startDate, DateTime endDate)
         {
             Booking[] activeBookings = _bookingRepository.GetAll().Where(b => b.IsActive).ToArray();
 
             return (from room in _roomRepository.GetAll()
-                let activeBookingsForCurrentRoom = activeBookings.Where(b => b.RoomId == room.Id)
-                where activeBookingsForCurrentRoom.All(b => startDate < b.StartDate &&
-                                                            endDate < b.StartDate ||
-                                                            startDate > b.EndDate &&
-                                                            endDate > b.EndDate)
-                select room).FirstOrDefault();
+                    let activeBookingsForCurrentRoom = activeBookings.Where(b => b.Room == room)
+                    where activeBookingsForCurrentRoom.All(b => startDate < b.StartDate &&
+                                                                endDate < b.StartDate ||
+                                                                startDate > b.EndDate &&
+                                                                endDate > b.EndDate)
+                    select room).FirstOrDefault();
         }
     }
 }

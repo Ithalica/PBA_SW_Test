@@ -1,9 +1,11 @@
-﻿using HotelBooking.Core.Interfaces;
+﻿using System;
+using System.Linq;
+using HotelBooking.Common.Mapping;
+using HotelBooking.Core.Interfaces;
 using HotelBooking.Core.Managers;
 using HotelBooking.Domain;
-using HotelBooking.Web.Data;
-using HotelBooking.Web.Data.Repositories;
-using HotelBooking.Web.Models;
+using HotelBooking.Persistence.DataContext;
+using HotelBooking.Persistence.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -28,11 +30,18 @@ namespace HotelBooking.Web
             //        options.UseSqlServer(Configuration.GetConnectionString("HotelBookingContext")));
 
             services.AddDbContext<HotelBookingContext>(opt => opt.UseInMemoryDatabase("HotelBookingDb"));
-            services.AddScoped<IRepository<Room>, RoomRepository>();
-            services.AddScoped<IRepository<Customer>, CustomerRepository>();
-            services.AddScoped<IRepository<Booking>, BookingRepository>();
+            services.AddScoped<IRepository<Room>, SqlRoomRepository>();
+            services.AddScoped<IRepository<Customer>, SqlCustomerRepository>();
+            services.AddScoped<IRepository<Booking>, SqlBookingRepository>();
             services.AddScoped<IBookingManager, BookingManger>();
             services.AddScoped<ICustomerManager, CustomerManager>();
+            
+            Type[] systemTypes = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(a => a.GetTypes())
+                .ToArray();
+            systemTypes.Where(x => typeof(IMapper<,>).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
+                .Select(type =>
+                    services.AddTransient(typeof(IMapper<,>), type));
 
             services.AddMvc();
 
@@ -43,7 +52,7 @@ namespace HotelBooking.Web
         {
             if (env.IsDevelopment())
             {
-                
+
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
             }

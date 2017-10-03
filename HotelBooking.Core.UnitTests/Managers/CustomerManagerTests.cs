@@ -1,12 +1,12 @@
 using System.Collections.Generic;
+using System.Linq;
 using HotelBooking.Core.Interfaces;
+using HotelBooking.Core.Managers;
 using HotelBooking.Domain;
 using NSubstitute;
 using NUnit.Framework;
-using System.Linq;
-using HotelBooking.Core.Managers;
 
-namespace HotelBookingStartupProject.UnitTests.Managers
+namespace HotelBooking.Core.UnitTests.Managers
 {
     [TestFixture]
     public class CustomerManagerTests
@@ -53,19 +53,17 @@ namespace HotelBookingStartupProject.UnitTests.Managers
             return new CustomerManager(_subRepository);
         }
 
-        private IEnumerable<Customer> TestCustomerDbEntities()
+        private IList<Customer> TestCustomerDbEntities()
         {
             return new List<Customer>
             {
-                new Customer
+                new Customer(1, "John Smith")
                 {
-                    Id = 1,
-                    Name="John Smith", Email="js@gmail.com"
+                    Email="js@gmail.com"
                 },
-                new Customer
+                new Customer(2, "Jane Doe")
                 {
-                    Id = 2,
-                    Name="Jane Doe", Email="jd@gmail.com"
+                    Email="jd@gmail.com"
                 }
             };
         }

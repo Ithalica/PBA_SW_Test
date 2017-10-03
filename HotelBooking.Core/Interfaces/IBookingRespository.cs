@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using HotelBooking.Domain;
 
 namespace HotelBooking.Core.Interfaces
 {
-    public interface IBookingRespository
+    public interface IBookingRespository : IRepository<Booking>
     {
         
     }

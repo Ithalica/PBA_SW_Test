@@ -7,7 +7,7 @@ using System.Linq;
 using HotelBooking.Core.Managers;
 using NSubstitute;
 
-namespace HotelBookingStartupProject.UnitTests.Managers
+namespace HotelBooking.Core.UnitTests.Managers
 {
     [TestFixture]
     public class BookingMangerTests
@@ -40,7 +40,7 @@ namespace HotelBookingStartupProject.UnitTests.Managers
         [Test]
         public void CreateBooking_NoAvaliableRoom_Failure()
         {
-            Booking booking = new Booking()
+            Booking booking = new Booking(0)
             {
                 StartDate = new DateTime(2016, 01, 01),
                 EndDate = new DateTime(2016, 01, 10)
@@ -54,7 +54,7 @@ namespace HotelBookingStartupProject.UnitTests.Managers
         [Test]
         public void CreateBooking_NoAvaliableRoom_Success()
         {
-            Booking booking = new Booking()
+            Booking booking = new Booking(0)
             {
                 StartDate = new DateTime(2016, 02, 01),
                 EndDate = new DateTime(2016, 02, 10)
@@ -72,7 +72,7 @@ namespace HotelBookingStartupProject.UnitTests.Managers
             DateTime startDate = new DateTime(2016, 01, 01);
             DateTime endDate = new DateTime(2016, 01, 10);
 
-            Room room = _bookingManager.GetAvaliableRoom(startDate, endDate);
+            Room room = _bookingManager.GetAvailableRoom(startDate, endDate);
 
             Assert.IsNull(room);
         }
@@ -83,7 +83,7 @@ namespace HotelBookingStartupProject.UnitTests.Managers
             DateTime startDate = new DateTime(2016, 02, 01);
             DateTime endDate = new DateTime(2016, 02, 10);
 
-            Room room = _bookingManager.GetAvaliableRoom(startDate, endDate);
+            Room room = _bookingManager.GetAvailableRoom(startDate, endDate);
 
             Assert.IsNotNull(room);
         }
@@ -170,21 +170,18 @@ namespace HotelBookingStartupProject.UnitTests.Managers
         {
             List<Room> rooms = new List<Room>()
             {
-                new Room
+                new Room(1)
                 {
-                    Id = 1,
                     Description = "A"
                 },
 
-                new Room
+                new Room(2)
                 {
-                    Id = 2,
                     Description = "B"
                 },
 
-                new Room
+                new Room(3)
                 {
-                    Id = 3,
                     Description = "C"
                 }
             };
@@ -196,50 +193,45 @@ namespace HotelBookingStartupProject.UnitTests.Managers
         {
             List<Booking> bookings = new List<Booking>()
             {
-                new Booking
+                new Booking(1)
                 {
-                    Id = 1,
                     StartDate = new DateTime(2016, 01, 01),
                     EndDate = new DateTime(2016, 01, 08),
                     IsActive = true,
-                    CustomerId = 1,
-                    RoomId = 1
+                    Customer = new Customer(1, "John Doe"),
+                    Room = new Room(1)
                 },
-                new Booking
+                new Booking(2)
                 {
-                    Id = 2,
                     StartDate = new DateTime(2016, 01, 01),
                     EndDate = new DateTime(2016, 01, 08),
                     IsActive = true,
-                    CustomerId = 1,
-                    RoomId = 2
+                    Customer = new Customer(1, "John Doe"),
+                    Room = new Room(2)
                 },
-                new Booking
+                new Booking(3)
                 {
-                    Id = 3,
                     StartDate = new DateTime(2016, 01, 01),
                     EndDate = new DateTime(2016, 01, 08),
                     IsActive = true,
-                    CustomerId = 1,
-                    RoomId = 3
+                    Customer = new Customer(1, "John Doe"),
+                    Room = new Room(3)
                 },
-                new Booking
+                new Booking(4)
                 {
-                    Id = 4,
                     StartDate = new DateTime(2016, 03, 03),
                     EndDate = new DateTime(2016, 03, 10),
                     IsActive = true,
-                    CustomerId = 2,
-                    RoomId = 2
+                    Customer = new Customer(2, "Jane Wut"),
+                    Room = new Room(2)
                 },
-                new Booking
+                new Booking(5)
                 {
-                    Id = 5,
                     StartDate = new DateTime(2016, 01, 01),
                     EndDate = new DateTime(2016, 01, 10),
                     IsActive = true,
-                    CustomerId = 1,
-                    RoomId = 3
+                    Customer = new Customer(1, "John Doe"),
+                    Room = new Room(3)
                 }
             };
 

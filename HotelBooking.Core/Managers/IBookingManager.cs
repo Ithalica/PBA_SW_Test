@@ -11,6 +11,6 @@ namespace HotelBooking.Core.Managers
         bool CreateBooking(Booking booking);
         List<DateTime> GetFullyOccupiedDates(IList<Booking> bookings, DateTime minDate, DateTime maxDate);
         bool IsBookingDateValid(DateTime startDate, DateTime endDate);
-        Room GetAvaliableRoom(DateTime startDate, DateTime endDate);
+        Room GetAvailableRoom(DateTime startDate, DateTime endDate);
     }
 }

@@ -83,7 +83,7 @@ namespace HotelBooking.Web.Controllers
             {
                 if (!_bookingManager.IsBookingDateValid(booking.StartDate, booking.EndDate))
                 {
-                    ViewData["CustomerId"] = new SelectList(_customerManager.GetAllCustomers(), "Id", "Name", booking.CustomerId);
+                    ViewData["CustomerId"] = new SelectList(_customerManager.GetAllCustomers(), "Id", "Name", booking.Customer.Id);
                     ViewBag.Status = "The start date cannot be in the past or later than the end date.";
 
                     return View(booking);
@@ -95,7 +95,7 @@ namespace HotelBooking.Web.Controllers
                 }
             }
 
-            ViewData["CustomerId"] = new SelectList(_customerManager.GetAllCustomers(), "Id", "Name", booking.CustomerId);
+            ViewData["CustomerId"] = new SelectList(_customerManager.GetAllCustomers(), "Id", "Name", booking.Customer.Id);
             ViewBag.Status = "The booking could not be created. There were no available room.";
             return View(booking);
         }
@@ -113,8 +113,8 @@ namespace HotelBooking.Web.Controllers
             {
                 return NotFound();
             }
-            ViewData["CustomerId"] = new SelectList(_customerManager.GetAllCustomers(), "Id", "Name", booking.CustomerId);
-            ViewData["RoomId"] = new SelectList(_roomRepository.GetAll(), "Id", "Description", booking.RoomId);
+            ViewData["CustomerId"] = new SelectList(_customerManager.GetAllCustomers(), "Id", "Name", booking.Customer.Id);
+            ViewData["RoomId"] = new SelectList(_roomRepository.GetAll(), "Id", "Description", booking.Room.Id);
             return View(booking);
         }
 
@@ -134,7 +134,7 @@ namespace HotelBooking.Web.Controllers
             {
                 try
                 {
-                    _bookingRepository.Edit(booking);
+                    _bookingRepository.TryUpdate(booking, out var _);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -149,8 +149,8 @@ namespace HotelBooking.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CustomerId"] = new SelectList(_customerManager.GetAllCustomers(), "Id", "Name", booking.CustomerId);
-            ViewData["RoomId"] = new SelectList(_roomRepository.GetAll(), "Id", "Description", booking.RoomId);
+            ViewData["CustomerId"] = new SelectList(_customerManager.GetAllCustomers(), "Id", "Name", booking.Customer.Id);
+            ViewData["RoomId"] = new SelectList(_roomRepository.GetAll(), "Id", "Description", booking.Room.Id);
             return View(booking);
         }
 
@@ -176,7 +176,7 @@ namespace HotelBooking.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            _bookingRepository.Remove(id);
+            _bookingRepository.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 

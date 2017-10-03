@@ -1,10 +1,26 @@
-﻿using HotelBooking.Domain;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using HotelBooking.Persistence.Entities;
+using Microsoft.EntityFrameworkCore;
 
-namespace HotelBooking.Web.Data
+namespace HotelBooking.Persistence.DataContext
 {
+    public class HotelBookingContext : DbContext
+    {
+        public HotelBookingContext(DbContextOptions<HotelBookingContext> options)
+            : base(options)
+        {
+            DbInitializer.Initialize(this);
+        }
+
+        public DbSet<Booking> Booking { get; set; }
+
+        public DbSet<Room> Room { get; set; }
+
+        public DbSet<Customer> Customer { get; set; }
+    }
+
     public static class DbInitializer
     {
         public static void Initialize(HotelBookingContext context)

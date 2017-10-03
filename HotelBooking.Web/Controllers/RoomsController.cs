@@ -1,27 +1,27 @@
-﻿using HotelBooking.Domain;
+﻿using HotelBooking.Core.Interfaces;
+using HotelBooking.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using HotelBooking.Core.Interfaces;
 
 namespace HotelBooking.Web.Controllers
 {
-    public class CustomersController : Controller
+    public class RoomsController : Controller
     {
-        private readonly IRepository<Customer> repository;
+        private IRepository<Room> repository;
 
-        public CustomersController(IRepository<Customer> repos)
+        public RoomsController(IRepository<Room> repos)
         {
             repository = repos;
         }
 
-        // GET: Customers
+        // GET: Rooms
         public IActionResult Index()
         {
             return View(repository.GetAll().ToList());
         }
 
-        // GET: Customers/Details/5
+        // GET: Rooms/Details/5
         public IActionResult Details(int? id)
         {
             if (id == null)
@@ -29,37 +29,37 @@ namespace HotelBooking.Web.Controllers
                 return NotFound();
             }
 
-            Customer customer = repository.Get(id.Value);
-            if (customer == null)
+            Room room = repository.Get(id.Value);
+            if (room == null)
             {
                 return NotFound();
             }
 
-            return View(customer);
+            return View(room);
         }
 
-        // GET: Customers/Create
+        // GET: Rooms/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Customers/Create
+        // POST: Rooms/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,Name,Email")] Customer customer)
+        public IActionResult Create([Bind("Id,Description")] Room room)
         {
             if (ModelState.IsValid)
             {
-                repository.Add(customer);
+                repository.TryCreate(room, out room);
                 return RedirectToAction(nameof(Index));
             }
-            return View(customer);
+            return View(room);
         }
 
-        // GET: Customers/Edit/5
+        // GET: Rooms/Edit/5
         public IActionResult Edit(int? id)
         {
             if (id == null)
@@ -67,22 +67,22 @@ namespace HotelBooking.Web.Controllers
                 return NotFound();
             }
 
-            Customer customer = repository.Get(id.Value);
-            if (customer == null)
+            Room room = repository.Get(id.Value);
+            if (room == null)
             {
                 return NotFound();
             }
-            return View(customer);
+            return View(room);
         }
 
-        // POST: Customers/Edit/5
+        // POST: Rooms/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("Id,Name,Email")] Customer customer)
+        public IActionResult Edit(int id, [Bind("Id,Description")] Room room)
         {
-            if (id != customer.Id)
+            if (id != room.Id)
             {
                 return NotFound();
             }
@@ -91,11 +91,11 @@ namespace HotelBooking.Web.Controllers
             {
                 try
                 {
-                    repository.Edit(customer);
+                    repository.TryUpdate(room, out var _);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (repository.Get(customer.Id) == null)
+                    if (repository.Get(room.Id) == null)
                     {
                         return NotFound();
                     }
@@ -106,10 +106,10 @@ namespace HotelBooking.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(customer);
+            return View(room);
         }
 
-        // GET: Customers/Delete/5
+        // GET: Rooms/Delete/5
         public IActionResult Delete(int? id)
         {
             if (id == null)
@@ -117,21 +117,21 @@ namespace HotelBooking.Web.Controllers
                 return NotFound();
             }
 
-            Customer customer = repository.Get(id.Value);
-            if (customer == null)
+            Room room = repository.Get(id.Value);
+            if (room == null)
             {
                 return NotFound();
             }
 
-            return View(customer);
+            return View(room);
         }
 
-        // POST: Customers/Delete/5
+        // POST: Rooms/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            repository.Remove(id);
+            repository.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
