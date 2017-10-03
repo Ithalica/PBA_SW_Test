@@ -35,13 +35,6 @@ namespace HotelBooking.Web
             services.AddScoped<IRepository<Booking>, SqlBookingRepository>();
             services.AddScoped<IBookingManager, BookingManger>();
             services.AddScoped<ICustomerManager, CustomerManager>();
-            
-            Type[] systemTypes = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(a => a.GetTypes())
-                .ToArray();
-            systemTypes.Where(x => typeof(IMapper<,>).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
-                .Select(type =>
-                    services.AddTransient(typeof(IMapper<,>), type));
 
             services.AddMvc();
 

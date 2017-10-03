@@ -13,22 +13,22 @@ namespace HotelBooking.Persistence.Repositories
     public class SqlRoomRepository : IRepository<Room>
     {
         private readonly HotelBookingContext _hotelBookingContext;
-        private readonly RoomMapper _roomMapper;
 
         public SqlRoomRepository(HotelBookingContext hotelBookingContext)
         {
             _hotelBookingContext = hotelBookingContext;
-            _roomMapper = new RoomMapper();
         }
 
         public Room Get(int id)
         {
-            return _roomMapper.Map(_hotelBookingContext.Room.Find(id));
+            var mapper = new RoomMapper();
+            return mapper.Map(_hotelBookingContext.Room.Find(id));
         }
 
         public IList<Room> GetAll()
         {
-            return _hotelBookingContext.Room.Select(_roomMapper.Map).ToList();
+            var mapper = new RoomMapper();
+            return _hotelBookingContext.Room.Select(mapper.Map).ToList();
         }
 
         public bool TryCreate(Room item, out Room createdItem)

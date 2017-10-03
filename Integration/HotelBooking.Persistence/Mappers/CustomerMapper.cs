@@ -22,7 +22,7 @@ namespace HotelBooking.Persistence.Mappers
                 Id = source.Id,
                 Name = source.Name,
                 Email = source.Email,
-                Bookings = source.Bookings.Select(_bookingMapper.Map).ToList()
+                //Bookings = source.Bookings.Select(_bookingMapper.Map).ToList()
             };
         }
 
@@ -34,7 +34,7 @@ namespace HotelBooking.Persistence.Mappers
             return new Domain.Customer(source.Id,source.Name)
             {
                 Email = source.Email,
-                Bookings = source.Bookings.Select(_bookingMapper.Map).ToList()
+                //Bookings = source.Bookings.Select(_bookingMapper.Map).ToList()
             };
         }
     }
