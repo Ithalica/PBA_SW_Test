@@ -12,17 +12,18 @@ namespace HotelBooking.Web.Controllers
 {
     public class BookingsController : Controller
     {
-        private readonly IRepository<Booking> _bookingRepository;
+
         private readonly IBookingManager _bookingManager;
         private readonly ICustomerManager _customerManager;
-        private readonly IRepository<Room> _roomRepository;
+        private readonly IRoomManager _roomManager;
 
-        public BookingsController(IRepository<Booking> bookingRepos, IRepository<Room> roomRepos, IBookingManager bookingManager, ICustomerManager customerManager)
+
+        public BookingsController( IBookingManager bookingManager, ICustomerManager customerManager, IRoomManager roomManager)
         {
-            _bookingRepository = bookingRepos;
-            _roomRepository = roomRepos;
+        
             _bookingManager = bookingManager;
             _customerManager = customerManager;
+            _roomManager = roomManager;
         }
 
         // GET: Bookings
@@ -56,7 +57,7 @@ namespace HotelBooking.Web.Controllers
                 return NotFound();
             }
 
-            Booking booking = _bookingRepository.Get(id.Value);
+            Booking booking = _bookingManager.GetBooking(id.Value);
             if (booking == null)
             {
                 return NotFound();
@@ -118,13 +119,13 @@ namespace HotelBooking.Web.Controllers
                 return NotFound();
             }
 
-            Booking booking = _bookingRepository.Get(id.Value);
+            Booking booking = _bookingManager.GetBooking(id.Value);
             if (booking == null)
             {
                 return NotFound();
             }
             ViewData["Customer"] = new SelectList(_customerManager.GetAllCustomers(), "Id", "Name", booking.Customer.Id);
-            ViewData["Room"] = new SelectList(_roomRepository.GetAll(), "Id", "Description", booking.Room.Id);
+            ViewData["Room"] = new SelectList(_roomManager.GetAllRooms(), "Id", "Description", booking.Room.Id);
 
             //TODO: implement mapper
             var im = BookingInputModel.FromBooking(booking);
@@ -157,14 +158,14 @@ namespace HotelBooking.Web.Controllers
                     booking.EndDate = model.EndDate;
                     booking.StartDate = model.StartDate;
                     //booking.IsActive = model.IsActive;
-                    if (!_bookingRepository.TryUpdate(booking, out b))
+                    if (!_bookingManager.TryUpdateBooking(booking, out b))
                     {
                         //Provide feedback to user
                     };
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (_bookingRepository.Get(model.Id) == null)
+                    if (_bookingManager.GetBooking(model.Id) == null)
                     {
                         return NotFound();
                     }
@@ -173,7 +174,7 @@ namespace HotelBooking.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["Customer"] = new SelectList(_customerManager.GetAllCustomers(), "Id", "Name", model.CustomerId);
-            ViewData["Room"] = new SelectList(_roomRepository.GetAll(), "Id", "Description", model.RoomId);
+            ViewData["Room"] = new SelectList(_roomManager.GetAllRooms(), "Id", "Description", model.RoomId);
             return View(model);
         }
 
@@ -185,7 +186,7 @@ namespace HotelBooking.Web.Controllers
                 return NotFound();
             }
 
-            Booking booking = _bookingRepository.Get(id.Value);
+            Booking booking = _bookingManager.GetBooking(id.Value);
             if (booking == null)
             {
                 return NotFound();
@@ -201,7 +202,7 @@ namespace HotelBooking.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            _bookingRepository.Delete(id);
+            _bookingManager.DeleteBooking(id);
             return RedirectToAction(nameof(Index));
         }
 

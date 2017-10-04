@@ -3,23 +3,24 @@ using HotelBooking.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using HotelBooking.Core.Managers;
 using HotelBooking.Web.Models;
 
 namespace HotelBooking.Web.Controllers
 {
     public class RoomsController : Controller
     {
-        private readonly IRepository<Room> _repository;
+        private readonly IRoomManager _roomManager;
 
-        public RoomsController(IRepository<Room> repos)
+        public RoomsController(IRoomManager roomManager)
         {
-            _repository = repos;
+            _roomManager = roomManager;
         }
 
         // GET: Rooms
         public IActionResult Index()
         {
-            return View(_repository.GetAll().Select(RoomViewModel.FromRoom).ToList());
+            return View(_roomManager.GetAllRooms().Select(RoomViewModel.FromRoom).ToList());
         }
 
         // GET: Rooms/Details/5
@@ -30,7 +31,7 @@ namespace HotelBooking.Web.Controllers
                 return NotFound();
             }
 
-            Room room = _repository.Get(id.Value);
+            Room room = _roomManager.GetRoom(id.Value);
             if (room == null)
             {
                 return NotFound();
@@ -59,7 +60,7 @@ namespace HotelBooking.Web.Controllers
                     Description = room.Description
                 };
 
-                _repository.TryCreate(r, out var _);
+                _roomManager.TryCreateRoom(r, out var _);
                 return RedirectToAction(nameof(Index));
             }
             return View(room);
@@ -73,7 +74,7 @@ namespace HotelBooking.Web.Controllers
                 return NotFound();
             }
 
-            Room room = _repository.Get(id.Value);
+            Room room = _roomManager.GetRoom(id.Value);
             if (room == null)
             {
                 return NotFound();
@@ -102,11 +103,11 @@ namespace HotelBooking.Web.Controllers
 
                 try
                 {
-                    _repository.TryUpdate(r, out var _);
+                    _roomManager.TryUpdateRoom(r, out var _);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (_repository.Get(room.Id) == null)
+                    if (_roomManager.GetRoom(room.Id) == null)
                     {
                         return NotFound();
                     }
@@ -128,7 +129,7 @@ namespace HotelBooking.Web.Controllers
                 return NotFound();
             }
 
-            Room room = _repository.Get(id.Value);
+            Room room = _roomManager.GetRoom(id.Value);
             if (room == null)
             {
                 return NotFound();
@@ -142,7 +143,7 @@ namespace HotelBooking.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            _repository.Delete(id);
+            _roomManager.DeleteRoom(id);
             return RedirectToAction(nameof(Index));
         }
 

@@ -33,6 +33,7 @@ namespace HotelBooking.Web
             services.AddScoped<IRepository<Booking>, SqlBookingRepository>();
             services.AddScoped<IBookingManager, BookingManger>();
             services.AddScoped<ICustomerManager, CustomerManager>();
+            services.AddScoped<IRoomManager, RoomManager>();
             
 
             services.AddMvc();

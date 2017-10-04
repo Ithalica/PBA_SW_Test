@@ -23,6 +23,19 @@ namespace HotelBooking.Core.Managers
             return _bookingRepository.GetAll().ToList();
         }
 
+        public bool TryUpdateBooking(Booking item, out Booking updatedItem)
+        {
+            return _bookingRepository.TryUpdate(item, out updatedItem);
+        }
+        public bool DeleteBooking(int id)
+        {
+            return _bookingRepository.Delete(id);
+        }
+        public Booking GetBooking(int id)
+        {
+            return _bookingRepository.Get(id);
+        }
+
         public bool CreateBooking(Booking booking)
         {
             var room = GetAvailableRoom(booking.StartDate, booking.EndDate);
