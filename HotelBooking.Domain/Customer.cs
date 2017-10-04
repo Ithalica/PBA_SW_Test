@@ -7,6 +7,7 @@ namespace HotelBooking.Domain
         public Customer(int id, string name) : base(id, name)
         {
         }
+       
         public string Email { get; set; }
         public List<Booking> Bookings { get; set; } = new List<Booking>();
     }

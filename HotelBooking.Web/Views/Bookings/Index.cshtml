@@ -37,14 +37,13 @@
             @for (int day = 1; day <= 31; day++)
             {
                 @*<td bgcolor="red">o</td>*@
-                DateTime occupiedDate = DateTime.MinValue;
-                if (day <= DateTime.DaysInMonth(year, month))
-                {
-                    DateTime dt = new DateTime(year, month, day);
-                    occupiedDate = fullyOccupiedDates.FirstOrDefault(d => d == dt);
-                }
-                <td @if (occupiedDate > DateTime.MinValue) { <text> class="bg-danger" </text>  }>
-                </td>
+            DateTime occupiedDate = DateTime.MinValue;
+            if (day <= DateTime.DaysInMonth(year, month))
+            {
+                DateTime dt = new DateTime(year, month, day);
+                occupiedDate = fullyOccupiedDates.FirstOrDefault(d => d == dt);
+            }
+            <td @if (occupiedDate > DateTime.MinValue) { <text> class="bg-danger" </text>   }></td>
             }
         </tr>
     }
@@ -55,15 +54,15 @@
 <table class="table">
     <thead>
         <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.StartDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.EndDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.IsActive)
-                </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Customer)
             </th>
@@ -74,24 +73,25 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsActive)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Customer.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Room.Id)
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsActive)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Customer.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Room.Id)
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

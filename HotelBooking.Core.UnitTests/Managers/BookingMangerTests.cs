@@ -19,14 +19,19 @@ namespace HotelBooking.Core.UnitTests.Managers
         [SetUp]
         public void TestInitialize()
         {
+
             _subRepositoryRoom = Substitute.For<IRepository<Room>>();
             _subRepositoryRoom.GetAll().Returns(TestRoomDbEntities());
 
             _subRepositoryBooking = Substitute.For<IRepository<Booking>>();
             _subRepositoryBooking.GetAll().Returns(TestBookingDbEntities());
+         
+        
 
             _bookingManager = CreateBookingManger();
         }
+
+
 
         [TearDown]
         public void TearDown()
@@ -45,7 +50,7 @@ namespace HotelBooking.Core.UnitTests.Managers
                 StartDate = new DateTime(2016, 01, 01),
                 EndDate = new DateTime(2016, 01, 10)
             };
-
+            _subRepositoryBooking.TryCreate(booking, out var _).Returns(false);
             bool bookingCreated = _bookingManager.CreateBooking(booking);
 
             Assert.IsFalse(bookingCreated);
@@ -59,7 +64,7 @@ namespace HotelBooking.Core.UnitTests.Managers
                 StartDate = new DateTime(2016, 02, 01),
                 EndDate = new DateTime(2016, 02, 10)
             };
-
+            _subRepositoryBooking.TryCreate(booking, out var _).Returns(true);
             bool bookingCreated = _bookingManager.CreateBooking(booking);
 
             Assert.IsTrue(bookingCreated);
@@ -165,6 +170,7 @@ namespace HotelBooking.Core.UnitTests.Managers
         {
             return new BookingManger(_subRepositoryRoom, _subRepositoryBooking);
         }
+
 
         private static IList<Room> TestRoomDbEntities()
         {

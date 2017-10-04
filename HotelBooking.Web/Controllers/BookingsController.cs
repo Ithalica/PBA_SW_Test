@@ -4,23 +4,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using HotelBooking.Core.Managers;
+using HotelBooking.Web.Models;
 
 namespace HotelBooking.Web.Controllers
 {
     public class BookingsController : Controller
     {
         private readonly IRepository<Booking> _bookingRepository;
-        private readonly IRepository<Customer> _customerRepository;
         private readonly IBookingManager _bookingManager;
         private readonly ICustomerManager _customerManager;
         private readonly IRepository<Room> _roomRepository;
 
-        public BookingsController(IRepository<Booking> bookingRepos, IRepository<Room> roomRepos, IRepository<Customer> customerRepos, IBookingManager bookingManager, ICustomerManager customerManager)
+        public BookingsController(IRepository<Booking> bookingRepos, IRepository<Room> roomRepos, IBookingManager bookingManager, ICustomerManager customerManager)
         {
             _bookingRepository = bookingRepos;
             _roomRepository = roomRepos;
-            _customerRepository = customerRepos;
             _bookingManager = bookingManager;
             _customerManager = customerManager;
         }
@@ -68,7 +68,7 @@ namespace HotelBooking.Web.Controllers
         // GET: Bookings/Create
         public IActionResult Create()
         {
-            ViewData["CustomerId"] = new SelectList(_customerManager.GetAllCustomers(), "Id", "Name");
+            ViewData["Customer"] = new SelectList(_customerManager.GetAllCustomers(), "Id", "Name");
             return View();
         }
 
@@ -77,25 +77,36 @@ namespace HotelBooking.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("StartDate,EndDate,CustomerId")] Booking booking)
+        public IActionResult Create([Bind("StartDate,EndDate,CustomerId")] BookingInputModel booking)
         {
             if (ModelState.IsValid)
             {
+
+
+
                 if (!_bookingManager.IsBookingDateValid(booking.StartDate, booking.EndDate))
                 {
-                    ViewData["CustomerId"] = new SelectList(_customerManager.GetAllCustomers(), "Id", "Name", booking.Customer.Id);
+                    ViewData["Customer"] = new SelectList(_customerManager.GetAllCustomers(), "Id", "Name", booking.CustomerId);
                     ViewBag.Status = "The start date cannot be in the past or later than the end date.";
+                    
 
                     return View(booking);
                 }
 
-                if (_bookingManager.CreateBooking(booking))
+                var bookingsssss = new Booking(-1)
+                {
+                    StartDate = booking.StartDate,
+                    EndDate = booking.EndDate,
+                    Customer =  _customerManager.GetAllCustomers().FirstOrDefault(c => c.Id == booking.CustomerId),
+                };
+
+                if (_bookingManager.CreateBooking(bookingsssss))
                 {
                     return RedirectToAction(nameof(Index));
                 }
             }
 
-            ViewData["CustomerId"] = new SelectList(_customerManager.GetAllCustomers(), "Id", "Name", booking.Customer.Id);
+            ViewData["Customer"] = new SelectList(_customerManager.GetAllCustomers(), "Id", "Name", booking.CustomerId);
             ViewBag.Status = "The booking could not be created. There were no available room.";
             return View(booking);
         }
@@ -113,8 +124,8 @@ namespace HotelBooking.Web.Controllers
             {
                 return NotFound();
             }
-            ViewData["CustomerId"] = new SelectList(_customerManager.GetAllCustomers(), "Id", "Name", booking.Customer.Id);
-            ViewData["RoomId"] = new SelectList(_roomRepository.GetAll(), "Id", "Description", booking.Room.Id);
+            ViewData["Customer"] = new SelectList(_customerManager.GetAllCustomers(), "Id", "Name", booking.Customer.Id);
+            ViewData["Room"] = new SelectList(_roomRepository.GetAll(), "Id", "Description", booking.Room.Id);
             return View(booking);
         }
 
@@ -123,7 +134,7 @@ namespace HotelBooking.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("StartDate,EndDate,IsActive,CustomerId,RoomId")] Booking booking)
+        public IActionResult Edit(int id, [Bind("StartDate,EndDate,IsActive,Customer,Room")] Booking booking)
         {
             if (id != booking.Id)
             {
@@ -149,8 +160,8 @@ namespace HotelBooking.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CustomerId"] = new SelectList(_customerManager.GetAllCustomers(), "Id", "Name", booking.Customer.Id);
-            ViewData["RoomId"] = new SelectList(_roomRepository.GetAll(), "Id", "Description", booking.Room.Id);
+            ViewData["Customer"] = new SelectList(_customerManager.GetAllCustomers(), "Id", "Name", booking.Customer.Id);
+            ViewData["Room"] = new SelectList(_roomRepository.GetAll(), "Id", "Description", booking.Room.Id);
             return View(booking);
         }
 

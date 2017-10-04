@@ -30,7 +30,9 @@ namespace HotelBooking.Core.Managers
             {
                 booking.Room = room;
                 booking.IsActive = true;
-                return _bookingRepository.TryCreate(booking, out var _);
+                var res = _bookingRepository.TryCreate(booking, out var _);
+
+                return res;
             }
             return false;
         }
@@ -78,13 +80,14 @@ namespace HotelBooking.Core.Managers
         {
             Booking[] activeBookings = _bookingRepository.GetAll().Where(b => b.IsActive).ToArray();
 
-            return (from room in _roomRepository.GetAll()
-                    let activeBookingsForCurrentRoom = activeBookings.Where(b => b.Room == room)
-                    where activeBookingsForCurrentRoom.All(b => startDate < b.StartDate &&
-                                                                endDate < b.StartDate ||
-                                                                startDate > b.EndDate &&
-                                                                endDate > b.EndDate)
-                    select room).FirstOrDefault();
+            foreach (Room room in _roomRepository.GetAll())
+            {
+                IEnumerable<Booking> activeBookingsForCurrentRoom = activeBookings.Where(b => b.Room.Id == room.Id);
+                if (activeBookingsForCurrentRoom.All(b => startDate < b.StartDate && endDate < b.StartDate || startDate > b.EndDate && endDate > b.EndDate))
+                    return room;
+            }
+
+            return null;
         }
     }
 }
