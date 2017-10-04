@@ -2,11 +2,13 @@
 
 namespace HotelBooking.Domain
 {
-    public class Customer
+    public class Customer : NameIdPair
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
+        public Customer(int id, string name) : base(id, name)
+        {
+        }
+       
         public string Email { get; set; }
-        public virtual List<Booking> Bookings { get; set; }
+        public List<Booking> Bookings { get; set; } = new List<Booking>();
     }
 }

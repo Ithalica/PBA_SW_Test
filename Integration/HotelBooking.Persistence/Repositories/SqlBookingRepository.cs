@@ -1,34 +1,62 @@
-﻿using System.Collections.Generic;
-using HotelBooking.Core.Interfaces;
+﻿using HotelBooking.Core.Interfaces;
 using HotelBooking.Domain;
+using HotelBooking.Persistence.DataContext;
+using HotelBooking.Persistence.Mappers;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace HotelBooking.Persistence.Repositories
 {
     public class SqlBookingRepository : IRepository<Booking>
     {
-        public IEnumerable<Booking> GetAll()
+        private readonly HotelBookingContext _dbContext;
+
+        public SqlBookingRepository(HotelBookingContext dbContext)
         {
-            throw new System.NotImplementedException();
+            _dbContext = dbContext;
+        }
+
+        public IList<Booking> GetAll()
+        {
+            var bookingMapper = new BookingMapper();
+            return _dbContext.Booking.Include(b => b.Customer).Include(b => b.Room).Select(bookingMapper.Map).ToList();
         }
 
         public Booking Get(int id)
         {
-            throw new System.NotImplementedException();
+            var bookingMapper = new BookingMapper();
+            return bookingMapper.Map(_dbContext.Booking.Include(b => b.Customer).Include(b => b.Room).FirstOrDefault(x => x.Id == id));
         }
 
-        public Booking Add(Booking entity)
+        public bool TryCreate(Booking entity, out Booking createdEntity)
         {
-            throw new System.NotImplementedException();
+            var bookingMapper = new BookingMapper();
+            Entities.Booking dbBooking = bookingMapper.Map(entity);
+
+            _dbContext.Booking.Add(dbBooking);
+            _dbContext.SaveChanges();
+            createdEntity = Get(dbBooking.Id);
+            return true;
         }
 
-        public Booking Edit(Booking entity)
+        public bool TryUpdate(Booking entity, out Booking updatedEntity)
         {
-            throw new System.NotImplementedException();
+            var item = _dbContext.Booking.Find(entity.Id);
+            item.EndDate = entity.EndDate;
+            item.StartDate = entity.StartDate;
+            item.IsActive = entity.IsActive;
+            _dbContext.SaveChanges();
+            updatedEntity = Get(item.Id);
+            return true;
         }
 
-        public bool Remove(int id)
+        public bool Delete(int id)
         {
-            throw new System.NotImplementedException();
+            var item = _dbContext.Booking.Find(id);
+            _dbContext.Entry(item).State = EntityState.Deleted;
+            _dbContext.SaveChanges();
+            return true;
         }
     }
 }

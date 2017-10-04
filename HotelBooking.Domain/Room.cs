@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-
-namespace HotelBooking.Domain
+﻿namespace HotelBooking.Domain
 {
-    public class Room
+    public class Room : IdentifiableObject
     {
-        public int Id { get; set; }
+        public Room(int id) : base(id)
+        {
+
+        }
         public string Description { get; set; }
-        public virtual List<Booking> Bookings { get; set; }
     }
 }
