@@ -45,7 +45,7 @@ namespace HotelBooking.Web.Controllers
 
             ViewBag.YearToDisplay = id;
 
-            return View(bookings);
+            return View(bookings.Select(BookingViewModel.FromBooking).ToList());
         }
 
         // GET: Bookings/Details/5
@@ -62,7 +62,9 @@ namespace HotelBooking.Web.Controllers
                 return NotFound();
             }
 
-            return View(booking);
+            var vm = BookingViewModel.FromBooking(booking);
+
+            return View(vm);
         }
 
         // GET: Bookings/Create
@@ -81,26 +83,23 @@ namespace HotelBooking.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-
-
-
                 if (!_bookingManager.IsBookingDateValid(booking.StartDate, booking.EndDate))
                 {
                     ViewData["Customer"] = new SelectList(_customerManager.GetAllCustomers(), "Id", "Name", booking.CustomerId);
                     ViewBag.Status = "The start date cannot be in the past or later than the end date.";
-                    
+
 
                     return View(booking);
                 }
 
-                var bookingsssss = new Booking(-1)
+                var bookings = new Booking(0)
                 {
                     StartDate = booking.StartDate,
                     EndDate = booking.EndDate,
-                    Customer =  _customerManager.GetAllCustomers().FirstOrDefault(c => c.Id == booking.CustomerId),
+                    Customer = _customerManager.GetAllCustomers().FirstOrDefault(c => c.Id == booking.CustomerId),
                 };
 
-                if (_bookingManager.CreateBooking(bookingsssss))
+                if (_bookingManager.CreateBooking(bookings))
                 {
                     return RedirectToAction(nameof(Index));
                 }
@@ -126,7 +125,10 @@ namespace HotelBooking.Web.Controllers
             }
             ViewData["Customer"] = new SelectList(_customerManager.GetAllCustomers(), "Id", "Name", booking.Customer.Id);
             ViewData["Room"] = new SelectList(_roomRepository.GetAll(), "Id", "Description", booking.Room.Id);
-            return View(booking);
+
+            //TODO: implement mapper
+            var im = BookingInputModel.FromBooking(booking);
+            return View(im);
         }
 
         // POST: Bookings/Edit/5
@@ -134,35 +136,45 @@ namespace HotelBooking.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("StartDate,EndDate,IsActive,Customer,Room")] Booking booking)
+        public IActionResult Edit(int id, [Bind("StartDate,EndDate,IsActive,Customer,Room")] BookingInputModel model)
         {
-            if (id != booking.Id)
+            if (id != model.Id)
             {
                 return NotFound();
             }
 
+
             if (ModelState.IsValid)
             {
+                Booking booking = _bookingManager.GetAllBookings().FirstOrDefault(x => x.Id == model.Id);
+                if (booking == null)
+                {
+                    return NotFound();
+                }
+                Booking b;
                 try
                 {
-                    _bookingRepository.TryUpdate(booking, out var _);
+                    booking.EndDate = model.EndDate;
+                    booking.StartDate = model.StartDate;
+                    //booking.IsActive = model.IsActive;
+                    if (!_bookingRepository.TryUpdate(booking, out b))
+                    {
+                        //Provide feedback to user
+                    };
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (_bookingRepository.Get(booking.Id) == null)
+                    if (_bookingRepository.Get(model.Id) == null)
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Customer"] = new SelectList(_customerManager.GetAllCustomers(), "Id", "Name", booking.Customer.Id);
-            ViewData["Room"] = new SelectList(_roomRepository.GetAll(), "Id", "Description", booking.Room.Id);
-            return View(booking);
+            ViewData["Customer"] = new SelectList(_customerManager.GetAllCustomers(), "Id", "Name", model.CustomerId);
+            ViewData["Room"] = new SelectList(_roomRepository.GetAll(), "Id", "Description", model.RoomId);
+            return View(model);
         }
 
         // GET: Bookings/Delete/5
@@ -178,8 +190,10 @@ namespace HotelBooking.Web.Controllers
             {
                 return NotFound();
             }
+            
+            var vm = BookingViewModel.FromBooking(booking);
 
-            return View(booking);
+            return View(vm);
         }
 
         // POST: Bookings/Delete/5

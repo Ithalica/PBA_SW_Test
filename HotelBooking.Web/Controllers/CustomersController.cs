@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using HotelBooking.Core.Interfaces;
+using HotelBooking.Web.Models;
 
 namespace HotelBooking.Web.Controllers
 {
@@ -18,7 +19,7 @@ namespace HotelBooking.Web.Controllers
         // GET: Customers
         public IActionResult Index()
         {
-            return View(_repository.GetAll().ToList());
+            return View(_repository.GetAll().Select(CustomerViewModel.FromCustomer).ToList());
         }
 
         // GET: Customers/Details/5
@@ -35,7 +36,7 @@ namespace HotelBooking.Web.Controllers
                 return NotFound();
             }
 
-            return View(customer);
+            return View(CustomerViewModel.FromCustomer(customer));
         }
 
         // GET: Customers/Create
@@ -49,11 +50,16 @@ namespace HotelBooking.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,Name,Email")] Customer customer)
+        public IActionResult Create([Bind("Id,Name,Email")] CustomerInputModel customer)
         {
             if (ModelState.IsValid)
             {
-                _repository.TryCreate(customer, out var _);
+                var cust = new Customer(0, customer.Name)
+                {
+                    Email = customer.Email
+                };
+
+                _repository.TryCreate(cust, out var _);
                 return RedirectToAction(nameof(Index));
             }
             return View(customer);
@@ -72,7 +78,7 @@ namespace HotelBooking.Web.Controllers
             {
                 return NotFound();
             }
-            return View(customer);
+            return View(CustomerInputModel.FromCustomer(customer));
         }
 
         // POST: Customers/Edit/5
@@ -80,7 +86,7 @@ namespace HotelBooking.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("Id,Name,Email")] Customer customer)
+        public IActionResult Edit(int id, [Bind("Id,Name,Email")] CustomerInputModel customer)
         {
             if (id != customer.Id)
             {
@@ -91,7 +97,12 @@ namespace HotelBooking.Web.Controllers
             {
                 try
                 {
-                    _repository.TryUpdate(customer, out var _);
+                    var cust = _repository.Get(customer.Id);
+                    cust.Email = customer.Email;
+                    //TODO: Consider if the customer name should be updatable.
+                    //cust.Name = customer.Name;
+
+                    _repository.TryUpdate(cust, out var _);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -99,10 +110,8 @@ namespace HotelBooking.Web.Controllers
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
+
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -123,7 +132,7 @@ namespace HotelBooking.Web.Controllers
                 return NotFound();
             }
 
-            return View(customer);
+            return View(CustomerViewModel.FromCustomer(customer));
         }
 
         // POST: Customers/Delete/5

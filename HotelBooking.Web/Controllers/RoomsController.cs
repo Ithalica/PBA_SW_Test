@@ -3,22 +3,23 @@ using HotelBooking.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using HotelBooking.Web.Models;
 
 namespace HotelBooking.Web.Controllers
 {
     public class RoomsController : Controller
     {
-        private IRepository<Room> repository;
+        private readonly IRepository<Room> _repository;
 
         public RoomsController(IRepository<Room> repos)
         {
-            repository = repos;
+            _repository = repos;
         }
 
         // GET: Rooms
         public IActionResult Index()
         {
-            return View(repository.GetAll().ToList());
+            return View(_repository.GetAll().Select(RoomViewModel.FromRoom).ToList());
         }
 
         // GET: Rooms/Details/5
@@ -29,13 +30,13 @@ namespace HotelBooking.Web.Controllers
                 return NotFound();
             }
 
-            Room room = repository.Get(id.Value);
+            Room room = _repository.Get(id.Value);
             if (room == null)
             {
                 return NotFound();
             }
 
-            return View(room);
+            return View(RoomViewModel.FromRoom(room));
         }
 
         // GET: Rooms/Create
@@ -49,11 +50,16 @@ namespace HotelBooking.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,Description")] Room room)
+        public IActionResult Create([Bind("Id,Description")] RoomInputModel room)
         {
             if (ModelState.IsValid)
             {
-                repository.TryCreate(room, out room);
+                var r = new Room(0)
+                {
+                    Description = room.Description
+                };
+
+                _repository.TryCreate(r, out var _);
                 return RedirectToAction(nameof(Index));
             }
             return View(room);
@@ -67,12 +73,12 @@ namespace HotelBooking.Web.Controllers
                 return NotFound();
             }
 
-            Room room = repository.Get(id.Value);
+            Room room = _repository.Get(id.Value);
             if (room == null)
             {
                 return NotFound();
             }
-            return View(room);
+            return View(RoomInputModel.FromRoom(room));
         }
 
         // POST: Rooms/Edit/5
@@ -80,7 +86,7 @@ namespace HotelBooking.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("Id,Description")] Room room)
+        public IActionResult Edit(int id, [Bind("Id,Description")] RoomInputModel room)
         {
             if (id != room.Id)
             {
@@ -89,13 +95,18 @@ namespace HotelBooking.Web.Controllers
 
             if (ModelState.IsValid)
             {
+                var r = new Room(room.Id)
+                {
+                    Description = room.Description
+                };
+
                 try
                 {
-                    repository.TryUpdate(room, out var _);
+                    _repository.TryUpdate(r, out var _);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (repository.Get(room.Id) == null)
+                    if (_repository.Get(room.Id) == null)
                     {
                         return NotFound();
                     }
@@ -117,13 +128,13 @@ namespace HotelBooking.Web.Controllers
                 return NotFound();
             }
 
-            Room room = repository.Get(id.Value);
+            Room room = _repository.Get(id.Value);
             if (room == null)
             {
                 return NotFound();
             }
 
-            return View(room);
+            return View(RoomViewModel.FromRoom(room));
         }
 
         // POST: Rooms/Delete/5
@@ -131,7 +142,7 @@ namespace HotelBooking.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            repository.Delete(id);
+            _repository.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
