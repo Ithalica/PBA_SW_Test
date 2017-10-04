@@ -1,10 +1,10 @@
 ﻿using HotelBooking.Core.Interfaces;
+using HotelBooking.Domain;
 using HotelBooking.Persistence.DataContext;
+using HotelBooking.Persistence.Mappers;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using HotelBooking.Domain;
-using HotelBooking.Persistence.Mappers;
 
 namespace HotelBooking.Persistence.Repositories
 {

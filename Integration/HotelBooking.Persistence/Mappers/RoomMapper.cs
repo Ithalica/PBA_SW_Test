@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HotelBooking.Common.Mapping;
-using HotelBooking.Domain;
+﻿using HotelBooking.Domain;
 
 namespace HotelBooking.Persistence.Mappers
 {
-    public class RoomMapper : IMapper<Entities.Room, Domain.Room>, IMapper<Domain.Room, Entities.Room>
+    public class RoomMapper
     {
         public Room Map(Entities.Room source)
         {

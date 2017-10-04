@@ -1,9 +1,8 @@
-﻿using HotelBooking.Common.Mapping;
-using HotelBooking.Persistence.Entities;
+﻿using HotelBooking.Persistence.Entities;
 
 namespace HotelBooking.Persistence.Mappers
 {
-    public class BookingMapper : IMapper<Booking, Domain.Booking>, IMapper<Domain.Booking, Booking>
+    public class BookingMapper
     {
         private readonly CustomerMapper _customerMapper;
         private readonly RoomMapper _roomMapper;

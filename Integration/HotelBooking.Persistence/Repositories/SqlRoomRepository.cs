@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HotelBooking.Core.Interfaces;
+﻿using HotelBooking.Core.Interfaces;
 using HotelBooking.Domain;
 using HotelBooking.Persistence.DataContext;
 using HotelBooking.Persistence.Mappers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace HotelBooking.Persistence.Repositories
 {

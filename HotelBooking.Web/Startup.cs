@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using HotelBooking.Common.Mapping;
+﻿using Autofac;
 using HotelBooking.Core.Interfaces;
 using HotelBooking.Core.Managers;
 using HotelBooking.Domain;
@@ -35,6 +33,7 @@ namespace HotelBooking.Web
             services.AddScoped<IRepository<Booking>, SqlBookingRepository>();
             services.AddScoped<IBookingManager, BookingManger>();
             services.AddScoped<ICustomerManager, CustomerManager>();
+            
 
             services.AddMvc();
 

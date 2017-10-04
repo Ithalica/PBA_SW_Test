@@ -15,8 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotelBooking.Persistence", "Integration\HotelBooking.Persistence\HotelBooking.Persistence.csproj", "{B21D4A78-3C0B-4DD9-B492-699F3B6BCB52}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelBooking.Common", "HotelBooking.Common\HotelBooking.Common.csproj", "{BEE90818-DE09-4FE9-AD84-BCF1703D27BB}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,10 +41,6 @@ Global
 		{B21D4A78-3C0B-4DD9-B492-699F3B6BCB52}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B21D4A78-3C0B-4DD9-B492-699F3B6BCB52}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B21D4A78-3C0B-4DD9-B492-699F3B6BCB52}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BEE90818-DE09-4FE9-AD84-BCF1703D27BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BEE90818-DE09-4FE9-AD84-BCF1703D27BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BEE90818-DE09-4FE9-AD84-BCF1703D27BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BEE90818-DE09-4FE9-AD84-BCF1703D27BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
