@@ -1,0 +1,10 @@
+{
+  "name": "hotelbooking",
+  "version": "1.0.0",
+  "devDependencies": {
+    "cypress": "^1.0.3"
+  },
+  "scripts": {
+      "cypress:open": "cypress open"
+    }
+  }
