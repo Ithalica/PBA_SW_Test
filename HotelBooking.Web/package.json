@@ -5,6 +5,7 @@
     "cypress": "^1.0.3"
   },
   "scripts": {
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run --spec cypress/integration/hotelbooking_spec.js"
   }
 }
