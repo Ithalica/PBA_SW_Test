@@ -23,3 +23,36 @@
 //
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+Cypress.Commands.add("TestSetup", () => {
+    cy.visit("/");
+});
+
+Cypress.Commands.add("BookingStartDate", (dayOffset) => {
+
+    var date = new Date();
+    if (!dayOffset) {
+        dayOffset = 1;
+    }
+
+    date.setDate(date.getDate() + dayOffset);
+    var day = date.getDate() > 9 ? date.getDate() : "0" + date.getDate();
+
+    var dateString = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + day;
+
+    cy.get("#StartDate").type(dateString);
+});
+
+Cypress.Commands.add("BookingEndDate", (dayOffset) => {
+    var date = new Date();
+
+    if (!dayOffset) {
+        dayOffset = 14;
+    }
+
+    date.setDate(date.getDate() + dayOffset);
+    var day = date.getDate() > 9 ? date.getDate() : "0" + date.getDate();
+    var dateString = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + day;
+
+    cy.get("#EndDate").type(dateString);
+});
