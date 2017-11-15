@@ -43,7 +43,7 @@
                 DateTime dt = new DateTime(year, month, day);
                 occupiedDate = fullyOccupiedDates.FirstOrDefault(d => d == dt);
             }
-            <td @if (occupiedDate > DateTime.MinValue) { <text> class="bg-danger" </text>   }></td>
+            <td @if (occupiedDate > DateTime.MinValue) { <text> class="bg-danger day-@day month-@month" </text>   }></td>
             }
         </tr>
     }

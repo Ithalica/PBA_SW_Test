@@ -34,10 +34,8 @@ namespace HotelBooking.Web
             services.AddScoped<IBookingManager, BookingManger>();
             services.AddScoped<ICustomerManager, CustomerManager>();
             services.AddScoped<IRoomManager, RoomManager>();
-            
 
             services.AddMvc();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
