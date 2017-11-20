@@ -25,13 +25,14 @@ namespace HotelBooking.Core.UnitTests.Managers
 
             _subRepositoryBooking = Substitute.For<IRepository<Booking>>();
             _subRepositoryBooking.GetAll().Returns(TestBookingDbEntities());
-         
-        
+            _subRepositoryBooking.Get(1).Returns(TestBookingDbEntities().First(c => c.Id == 1));
+            _subRepositoryBooking.Get(10).Returns((Booking)null);
+            _subRepositoryBooking.Delete(1).Returns(true);
+            _subRepositoryBooking.Delete(6).Returns(false);
+
 
             _bookingManager = CreateBookingManger();
         }
-
-
 
         [TearDown]
         public void TearDown()
@@ -166,11 +167,62 @@ namespace HotelBooking.Core.UnitTests.Managers
             Assert.IsFalse(result);
         }
 
+        [TestCase(1)]
+        public void DeleteBookings_BookingsIsDeleted_Sucess(int bookingId)
+        {
+            bool bookingDeleted = _bookingManager.DeleteBooking(bookingId);
+
+            Assert.IsTrue(bookingDeleted);
+        }
+
+        [TestCase(6)]
+        public void DeleteBookings_BookingsIsDeleted_Faliure(int bookingId)
+        {
+            bool bookingDeleted = _bookingManager.DeleteBooking(bookingId);
+
+            Assert.IsFalse(bookingDeleted);
+        }
+
+        [Test]
+        public void GetBooking_BookingExists_Success()
+        {
+            Booking booking = _bookingManager.GetBooking(1);
+
+            Assert.IsNotNull(booking);
+            Assert.IsTrue(booking.Id == 1);
+        }
+
+        [Test]
+        public void GetBooking_BookingExists_Faliure()
+        {
+            Booking booking = _bookingManager.GetBooking(10);
+
+            Assert.IsNull(booking);
+        }
+
+        [Test]
+        public void GetMinAndMaxBookingDates_BookingsExists_Success()
+        {
+            var allBookings = _subRepositoryBooking.GetAll();
+            (DateTime minDate, DateTime maxDate) minAndMaxDate = _bookingManager.GetMinAndMaxBookingDates(allBookings);
+
+            Assert.IsTrue(minAndMaxDate.minDate == allBookings.Select(c => c.StartDate).Min());
+            Assert.IsTrue(minAndMaxDate.maxDate == allBookings.Select(c => c.EndDate).Max());
+        }
+
+        [Test]
+        public void GetMinAndMaxBookingDates_NoBookingsExists_Success()
+        {
+            (DateTime minDate, DateTime maxDate) minAndMaxDate = _bookingManager.GetMinAndMaxBookingDates(new List<Booking>());
+
+            Assert.IsTrue(minAndMaxDate.minDate == DateTime.MinValue);
+            Assert.IsTrue(minAndMaxDate.maxDate == DateTime.MaxValue);
+        }
+
         private BookingManger CreateBookingManger()
         {
             return new BookingManger(_subRepositoryRoom, _subRepositoryBooking);
         }
-
 
         private static IList<Room> TestRoomDbEntities()
         {

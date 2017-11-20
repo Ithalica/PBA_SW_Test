@@ -16,13 +16,10 @@ namespace HotelBooking.Core.Managers
             _roomRepository = roomRepository;
             _bookingRepository = bookingRepository;
         }
-
-
         public IList<Booking> GetAllBookings()
         {
             return _bookingRepository.GetAll().ToList();
         }
-
         public bool TryUpdateBooking(Booking item, out Booking updatedItem)
         {
             return _bookingRepository.TryUpdate(item, out updatedItem);
@@ -35,7 +32,6 @@ namespace HotelBooking.Core.Managers
         {
             return _bookingRepository.Get(id);
         }
-
         public bool CreateBooking(Booking booking)
         {
             var room = GetAvailableRoom(booking.StartDate, booking.EndDate);
@@ -49,8 +45,6 @@ namespace HotelBooking.Core.Managers
             }
             return false;
         }
-
-
         public (DateTime minDate, DateTime maxDate) GetMinAndMaxBookingDates(IList<Booking> bookings)
         {
             var bookingStartDates = bookings.Select(b => b.StartDate);
@@ -61,7 +55,6 @@ namespace HotelBooking.Core.Managers
 
             return (minBookingDate, maxBookingDate);
         }
-
         public List<DateTime> GetFullyOccupiedDates(IList<Booking> bookings, DateTime minDate, DateTime maxDate)
         {
 
@@ -82,12 +75,10 @@ namespace HotelBooking.Core.Managers
             }
             return fullyOccupiedDates;
         }
-
         public bool IsBookingDateValid(DateTime startDate, DateTime endDate)
         {
             return startDate > DateTime.Today && startDate < endDate;
         }
-
         //INFO: Replaces old method: FindAvailableRoom 
         public Room GetAvailableRoom(DateTime startDate, DateTime endDate)
         {
